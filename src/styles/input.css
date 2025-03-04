@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+.progress-step {
+	@apply flex gap-4 items-center;
+}
+
+.progress-number {
+	@apply size-8 rounded-full flex items-center justify-center;
+}
+
+.progress-caption {
+	@apply flex text-sm text-gray-600 h-full items-center;
+}
+
+.prev-step {
+	@apply bg-gray-200 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300 cursor-pointer;
+}
+
+.next-step {
+	@apply bg-blue-600 disabled:bg-blue-200 disabled:cursor-not-allowed cursor-pointer text-white px-6 py-2 rounded-md hover:bg-blue-700;
+}
+
+.select2-container--default .select2-selection--single {
+	@apply w-full block rounded-t-md! bg-white py-1 text-base text-gray-900 outline-1 border-none! outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 h-full!;
+}
+
+.select2-selection__arrow {
+	@apply me-1 h-full!;
+}
+
+.select2-selection__clear {
+	@apply me-8! h-full!;
+}
+
+.select2-search__field {
+	@apply rounded-md! my-1! text-sm! outline-blue-600! border-gray-300 outline-offset-1!;
+}
+
+.select2-dropdown {
+	@apply rounded-b-md! border-none! outline-1! outline-gray-300! -outline-offset-1!;
+}
+
+.select2-results__option {
+	@apply text-sm  hover:bg-blue-600!;
+}
+
+.select2-results__option--highlighted {
+	@apply bg-blue-600!;
+}
