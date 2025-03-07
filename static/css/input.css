@@ -1,11 +1,27 @@
 @import "tailwindcss";
 
+.sidebar-btn {
+	@apply flex items-center p-2 rounded-lg text-gray-600 hover:bg-blue-200 hover:text-blue-600 cursor-pointer;
+}
+
+.sidebar-active {
+	@apply bg-blue-600 text-white hover:bg-blue-600 hover:text-white;
+}
+
+.sidebar-btn-icon {
+	@apply shrink-0 size-6;
+}
+
+.sidebar-btn-text {
+	@apply flex-1 ms-3 group-hover:font-semibold;
+}
+
 .progress-step {
 	@apply flex gap-4 items-center;
 }
 
 .progress-number {
-	@apply size-8 rounded-full flex items-center justify-center;
+	@apply size-8 rounded-full flex items-center justify-center font-semibold;
 }
 
 .progress-caption {
@@ -20,8 +36,12 @@
 	@apply bg-blue-600 disabled:bg-blue-200 disabled:cursor-not-allowed cursor-pointer text-white px-6 py-2 rounded-md hover:bg-blue-700;
 }
 
+.select2-container {
+	@apply w-full!;
+}
+
 .select2-container--default .select2-selection--single {
-	@apply w-full block rounded-t-md! bg-white py-1 text-base text-gray-900 outline-1 border-none! outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 h-full!;
+	@apply rounded-t-md! py-1 text-base text-gray-900 outline-1 border-none! outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 h-full!;
 }
 
 .select2-selection__arrow {
@@ -37,11 +57,15 @@
 }
 
 .select2-dropdown {
-	@apply rounded-b-md! border-none! outline-1! outline-gray-300! -outline-offset-1!;
+	@apply fixed! left-auto! rounded-b-md! border-none! outline-1! outline-gray-300! -outline-offset-1!;
 }
 
 .select2-results__option {
-	@apply text-sm  hover:bg-blue-600!;
+	@apply text-sm hover:bg-blue-600!;
+}
+
+.select2-results__message {
+	@apply text-sm hover:text-white;
 }
 
 .select2-results__option--highlighted {

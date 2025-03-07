@@ -144,19 +144,18 @@ $(document).ready(function () {
 		async startCamera() {
 			try {
 				$(document).off("keydown");
-				const stream = await navigator.mediaDevices.getUserMedia({
-					video: true,
-				});
-				$elements.videoPreview.srcObject = stream;
-
-				this.startInitialInstruction();
-
 				$(document).on("keydown", (e) => {
 					if (e.code === "Space") {
 						e.preventDefault();
 						this.capturePhoto();
 					}
 				});
+				const stream = await navigator.mediaDevices.getUserMedia({
+					video: true,
+				});
+				$elements.videoPreview.srcObject = stream;
+
+				this.startInitialInstruction();
 			} catch (err) {
 				alert("Camera access denied. Please check your permissions.");
 				console.error("Error accessing camera:", err);
@@ -211,6 +210,7 @@ $(document).ready(function () {
 					tracks.forEach((track) => track.stop());
 					$elements.videoPreview.srcObject = null;
 				}
+				$(document).off("keydown");
 			}
 
 			if (currentStep === 3) {
@@ -219,8 +219,8 @@ $(document).ready(function () {
 		},
 
 		updateConfirmationDetails() {
-			$("#confirmName").text($("#fullname").val());
 			$("#confirmIdentityNumber").text($("#identityNumber").val());
+			$("#confirmName").text($("#name").val());
 			$("#confirmUnit").text($("#unit").val());
 		},
 	};
@@ -247,8 +247,49 @@ $(document).ready(function () {
 					);
 				}
 			);
+
+			$("#registrationForm").submit(function (e) {
+				e.preventDefault();
+				const formData = new FormData();
+				formData.append("identityNumber", $("#identityNumber").val());
+				formData.append("name", $("#name").val());
+				formData.append("unit", $("#unit").val());
+
+				// Append the images to the form data
+				ImageCaptureModule.capturedImages.forEach((image, index) => {
+					const blob = dataURLtoBlob(image.dataUrl);
+					formData.append(`images`, blob, `image_${index}.jpg`);
+				});
+
+				// Send the form data to the server
+				$.ajax({
+					type: "POST",
+					url: "/register",
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (response) {
+						window.location.href = "/register";
+					},
+				});
+			});
 		},
 	};
+
+	// Helper function to convert data URL to blob
+	function dataURLtoBlob(dataURL) {
+		const bytes = dataURL.split(",")[1];
+		const mime = dataURL.split(",")[0].split(":")[1].split(";")[0];
+		const binary = atob(bytes);
+		const arrayBuffer = new ArrayBuffer(binary.length);
+		const uint8Array = new Uint8Array(arrayBuffer);
+
+		for (let i = 0; i < binary.length; i++) {
+			uint8Array[i] = binary.charCodeAt(i);
+		}
+
+		return new Blob([arrayBuffer], { type: mime });
+	}
 
 	// Event Bindings
 	function bindEvents() {
@@ -267,13 +308,6 @@ $(document).ready(function () {
 		// Delete Pictures Button Handler
 		$("#deletePicturesBtn").click(function () {
 			ImageCaptureModule.deleteAllPhoto();
-		});
-
-		// Form Submission
-		$elements.registrationForm.submit(function (e) {
-			e.preventDefault();
-			alert("Registration Submitted Successfully!");
-			// Implement actual submission logic here
 		});
 	}
 
