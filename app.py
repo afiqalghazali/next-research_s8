@@ -23,7 +23,6 @@ def register():
         name = request.form.get("name")
         unit = request.form.get("unit")
 
-        # Insert user record first, then store images with references
         user_doc = {
             "identityNumber": identityNumber,
             "name": name,
@@ -31,7 +30,6 @@ def register():
         }
         user_id = users.insert_one(user_doc).inserted_id
 
-        # Store images in GridFS
         if "images" in request.files:
             files = request.files.getlist("images")
             if len(files) > 0:
@@ -39,7 +37,6 @@ def register():
                     if file:
                         filename = f"{user_id}_{i}.jpg"
                         fs_id = fs.put(file, filename=filename)
-                        # Add ref to user document
                         users.update_one(
                             {"_id": user_id},
                             {"$set": {f"image_{i}": fs_id}}
@@ -71,11 +68,11 @@ def get_user_images(user_id):
         if image_key in user:
             fs_id = user[image_key]
             if fs_id:
-                # Retrieve from GridFS
                 grid_out = fs.get(fs_id)
-                # Convert to base64
+
                 file_data = grid_out.read()
                 encoded = base64.b64encode(file_data).decode("utf-8")
+
                 images_encoded.append({
                     "base64": encoded
                 })
@@ -85,19 +82,16 @@ def get_user_images(user_id):
 
 @app.route('/<id>/delete')
 def delete(id):
-    # Fetch the user document to get the image IDs
     user = users.find_one({'_id': ObjectId(id)})
 
     if user:
-        # Attempt to delete images from GridFS
         for i in range(5):
             image_key = f"image_{i}"
             if image_key in user:
                 fs_id = user[image_key]
                 if fs_id:
-                    fs.delete(fs_id)  # Delete the image from GridFS
+                    fs.delete(fs_id)
 
-        # Now delete the user document
         users.delete_one({'_id': ObjectId(id)})
 
     return redirect(url_for('database'))

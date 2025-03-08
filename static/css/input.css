@@ -17,7 +17,7 @@
 }
 
 .progress-step {
-	@apply flex gap-4 items-center;
+	@apply h-full flex flex-col lg:flex-row gap-4 items-center;
 }
 
 .progress-number {
@@ -25,7 +25,15 @@
 }
 
 .progress-caption {
-	@apply flex text-sm text-gray-600 h-full items-center;
+	@apply flex text-xs sm:text-sm font-semibold text-gray-600 h-full items-center;
+}
+
+.card-header {
+	@apply font-bold text-gray-900;
+}
+
+.input-fields {
+	@apply block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6;
 }
 
 .prev-step {
@@ -70,4 +78,8 @@
 
 .select2-results__option--highlighted {
 	@apply bg-blue-600!;
+}
+
+.modal-container {
+	@apply fixed z-70 w-full bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg;
 }
