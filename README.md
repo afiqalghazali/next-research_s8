@@ -34,7 +34,7 @@
 
 ### ℹ️ Logika utama dalam menjalanakan aplikasi.
 
-        ![Blueprint server](./gambar_readme/image.png)
+        ![Blueprint server](https://github.com/afiqalghazali/next-research_s8/blob/main/gambar_readme/image.png)
 
 ### ℹ️ Fungsi dari kode ini untuk menjalakan blueprint. Secara sederhananya digunakan untuk akses endpoint selain main atau indeks.html
 
@@ -62,11 +62,11 @@
 
 #### 🗃️ db.py => berfungsi untuk melakukan koneksi ke database. Keluaran dari file ini ada 2 yaitu conn sebagai koneksi dan cursor sebagai eksekusi query sql.
 
-            ![Database connection setting](./gambar_readme/db.png)
+            ![Database connection setting]((https://github.com/afiqalghazali/next-research_s8/blob/main/gambar_readme/db.png)
 
 ## ⚠️ Mohon perhatikan bagian port. Untuk melakukan setting silahkan ikuti langkah berikut.
 
-                ![Tampilan XAMPP](./gambar_readme/xampp.png)
+                ![Tampilan XAMPP][(https://github.com/afiqalghazali/next-research_s8/blob/main/gambar_readme/xampp.png)
 
 ### ℹ️ Buka Xampp anda dan lihat bagian port di sebelah tombol start.
 
