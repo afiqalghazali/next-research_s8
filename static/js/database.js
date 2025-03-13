@@ -35,24 +35,63 @@ $(document).ready(function () {
 		$("#detail-modal, #overlay").removeClass("hidden");
 	}
 
-	// Function to fetch images for the user
+	// // Function to fetch images for the user
+	// function fetchUserImages(userId) {
+	// 	var orientations = ["depan", "kiri", "kanan", "bawah", "atas"];
+	// 	$.ajax({
+	// 		url: "/user/" + userId + "/images",
+	// 		method: "GET",
+	// 		success: function (data) {
+	// 			data.forEach(function (imgObj, index) {
+	// 				var orientation = orientations[index % orientations.length];
+	// 				var imageDiv = `
+	// 					<div class="flex flex-col items-center bg-blue-600 rounded-lg size-40 m-2 p-1">
+	// 						<img title="User Image" src="data:image/jpeg;base64,${imgObj.base64}" class="w-full object-cover rounded-t-lg h-5/6" />
+	// 						<div class="w-full flex items-center h-1/6 text-xs sm:text-sm text-white font-semibold p-2 justify-center rounded-b-lg">
+	// 							Hadap ${orientation}
+	// 						</div>
+	// 					</div>`;
+	// 				$("#imagesContainer").append(imageDiv);
+	// 			});
+	// 		},
+	// 		error: function (err) {
+	// 			console.error("Failed to load images", err);
+	// 		},
+	// 	});
+	// }
+
 	function fetchUserImages(userId) {
 		var orientations = ["depan", "kiri", "kanan", "bawah", "atas"];
+
+		console.log("Fetching images for userId:", userId); // Debugging
+		if (!userId) {
+			console.error("User ID is missing!");
+			return;
+		}
+
 		$.ajax({
 			url: "/user/" + userId + "/images",
 			method: "GET",
 			success: function (data) {
-				data.forEach(function (imgObj, index) {
-					var orientation = orientations[index % orientations.length];
-					var imageDiv = `  
-						<div class="flex flex-col items-center bg-blue-600 rounded-lg size-40 m-2 p-1">  
-							<img title="User Image" src="data:image/jpeg;base64,${imgObj.base64}" class="w-full object-cover rounded-t-lg h-5/6" />  
-							<div class="w-full flex items-center h-1/6 text-xs sm:text-sm text-white font-semibold p-2 justify-center rounded-b-lg">  
-								Hadap ${orientation}  
-							</div>  
-						</div>`;
-					$("#imagesContainer").append(imageDiv);
-				});
+				// Hapus gambar lama sebelum menampilkan yang baru
+				$("#imagesContainer").empty();
+
+				// Periksa apakah data yang dikembalikan adalah objek
+				if (typeof data === "object" && !Array.isArray(data)) {
+					Object.keys(data).forEach((key, index) => {
+						var orientation = orientations[index % orientations.length]; // Pilih orientasi berdasarkan index
+						var imageDiv = `  
+							<div class="flex flex-col items-center bg-blue-600 rounded-lg size-40 m-2 p-1">  
+								<img title="User Image" src="data:image/jpeg;base64,${data[key]}" class="w-full object-cover rounded-t-lg h-5/6" />  
+								<div class="w-full flex items-center h-1/6 text-xs sm:text-sm text-white font-semibold p-2 justify-center rounded-b-lg">  
+									Hadap ${orientation}  
+								</div>  
+							</div>`;
+						$("#imagesContainer").append(imageDiv);
+					});
+				} else {
+					console.warn("Unexpected response format", data);
+				}
 			},
 			error: function (err) {
 				console.error("Failed to load images", err);

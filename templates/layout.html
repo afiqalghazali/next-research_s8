@@ -98,8 +98,9 @@
 				</li>
 				<li>
 					<a
-						href="{{ url_for('register') }} "
-						class="sidebar-btn group {{ 'sidebar-active' if request.path == url_for('register') else '' }}">
+						href="{{ url_for('router.register') }}"
+						class="sidebar-btn group {{ 'sidebar-active' if request.path == url_for('router.register')
+						else '' }}">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"
@@ -127,8 +128,8 @@
 				</li>
 				<li>
 					<a
-						href="{{ url_for('database') }}"
-						class="sidebar-btn group {{ 'sidebar-active' if request.path == url_for('database') else '' }}">
+						href="{{ url_for('router.database') }}"
+						class="sidebar-btn group {{ 'sidebar-active' if request.path == url_for('router.database') else '' }}">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"

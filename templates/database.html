@@ -15,16 +15,16 @@
 			{% for user in users %}
 			<tr
 				class="border-b border-gray-300 text-gray-900 hover:bg-blue-100 {{ 'bg-gray-100' if loop.index is even else 'bg-white'  }} {{ 'border-b-0' if loop.last else '' }}">
-				<td class="px-4 py-2">{{ user['identityNumber'] }}</td>
-				<td class="px-4 py-2">{{ user['name'] }}</td>
-				<td class="px-4 py-2">{{ user['unit'] }}</td>
+				<td class="px-4 py-2">{{ user['id'] }}</td>
+				<td class="px-4 py-2">{{ user['nama'] }}</td>
+				<td class="px-4 py-2">{{ user['unitKerja'] }}</td>
 				<td class="px-4 py-2 flex items-center gap-2">
 					<a
-						id="detail-btn-{{ user['_id'] }}"
-						data-user-id="{{ user['_id'] }}"
-						data-user-name="{{ user['name'] }}"
-						data-user-identity="{{ user['identityNumber'] }}"
-						data-user-unit="{{ user['unit'] }}"
+						id="detail-btn-{{ user['id'] }}"
+						data-user-id="{{ user['id'] }}"
+						data-user-name="{{ user['nama'] }}"
+						data-user-identity="{{ user['id'] }}"
+						data-user-unit="{{ user['unitKerja'] }}"
 						class="detail-btn inline-flex items-center bg-blue-600 rounded-md p-2 hover:bg-blue-700 focus:outline-none cursor-pointer"
 						title="View">
 						<svg
@@ -40,10 +40,10 @@
 						</svg>
 					</a>
 					<a
-						id="delete-btn-{{ user['_id'] }}"
-						data-user-id="{{ user['_id'] }}"
+						id="delete-btn-{{ user['id'] }}"
+						data-user-id="{{ user['id'] }}"
 						data-user-name="{{ user['name'] }}"
-						href="{{ url_for('delete', id=user['_id']) }}"
+						href="{{ url_for('router.delete', id=user['id']) }}"
 						class="delete-btn inline-flex items-center bg-red-600 rounded-md p-2 hover:bg-red-700 focus:outline-none"
 						title="Delete">
 						<svg
