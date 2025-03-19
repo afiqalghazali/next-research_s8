@@ -1,0 +1,50 @@
+{% extends "layout.html" %} {% block content %}
+
+<div class="w-full max-w-4xl mx-auto">
+	<div class="w-full h-110 flex justify-center mb-4">
+		<video
+			id="video"
+			class="rounded-lg w-full h-full border-2 border-blue-600 object-cover"
+			autoplay></video>
+		<canvas
+			id="canvas"
+			class="hidden rounded-lg w-full h-full border-2 border-blue-600 object-cover"></canvas>
+	</div>
+
+	<div class="w-full flex justify-center mt-4">
+		<div
+			class="w-full bg-white border border-gray-300 rounded-lg p-4 text-xs sm:text-sm font-normal text-blue-700">
+			<h1 class="font-bold text-lg mb-2">Informasi Pengguna</h1>
+			<table class="w-full">
+				<colgroup>
+					<col class="w-1/3" />
+					<col class="w-auto" />
+					<col class="w-2/3" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td>NIP/NIM/NRP</td>
+						<td class="text-center">:</td>
+						<td id="identityNumber" class="font-medium"></td>
+					</tr>
+					<tr>
+						<td>Nama</td>
+						<td class="text-center">:</td>
+						<td id="name" class="font-medium"></td>
+					</tr>
+					<tr>
+						<td>Unit Kerja</td>
+						<td class="text-center">:</td>
+						<td id="unit" class="font-medium"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div id="status" class="mt-2"></div>
+			<!-- Status message container -->
+		</div>
+	</div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script src="{{url_for('static', filename='js/detect.js')}}"></script>
+{% endblock %}

@@ -14,11 +14,13 @@
 
 ## ⚠️ Dalam tabel user buatkan kolom:
 
-### ℹ️ nim => Varchar(20) PRIMARY KEY
+### ℹ️ id => Varchar(20) PRIMARY KEY
 
 ### ℹ️ nama => Varchar(50)
 
 ### ℹ️ unitKerja => Varchar (50)
+
+### ℹ️ role => Varchar(50)
 
 # Adapun folder path didalam proyek ini adalah:
 
