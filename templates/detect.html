@@ -1,20 +1,85 @@
 {% extends "layout.html" %} {% block content %}
 
 <div class="w-full max-w-4xl mx-auto">
-	<div class="w-full h-110 flex justify-center mb-4">
-		<video
-			id="video"
-			class="rounded-lg w-full h-full border-2 border-blue-600 object-cover"
-			autoplay></video>
-		<canvas
-			id="canvas"
-			class="hidden rounded-lg w-full h-full border-2 border-blue-600 object-cover"></canvas>
+	<div class="w-full flex justify-center mb-4">
+		<div
+			class="w-full bg-white border border-gray-300 rounded-lg p-4 text-xs sm:text-sm font-normal">
+			<div class="flex h-auto justify-between items-center mb-4">
+				<h1 class="font-bold text-lg">Kamera Deteksi</h1>
+				<a
+					id="view-btn"
+					class="detail-btn inline-flex items-center bg-blue-600 rounded-md p-2 hover:bg-blue-700 focus:outline-none cursor-pointer"
+					title="View">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="currentColor"
+						class="size-4 text-white">
+						<path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+						<path
+							fill-rule="evenodd"
+							d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+							clip-rule="evenodd" />
+					</svg>
+				</a>
+			</div>
+
+			<div
+				class="flex gap-2 sm:gap-4 bg-blue-100 items-center rounded-md px-4 py-2 mb-4">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="currentColor"
+					class="size-10 sm:size-8 text-blue-500">
+					<path
+						fill-rule="evenodd"
+						d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+						clip-rule="evenodd" />
+				</svg>
+
+				<span class="text-center text-xs sm:text-sm text-blue-600"
+					>Tekan <strong>SPACEBAR</strong> untuk mengambil dan ambil ulang
+					foto.</span
+				>
+			</div>
+
+			<div class="relative w-full h-100">
+				<video
+					id="video"
+					class="rounded-lg w-full h-full border-2 border-blue-600 object-cover"
+					autoplay></video>
+				<canvas
+					id="canvas"
+					class="hidden rounded-lg w-full h-full border-2 border-blue-600 object-cover"></canvas>
+			</div>
+		</div>
 	</div>
 
-	<div class="w-full flex justify-center mt-4">
+	<!-- View modal -->
+	<div
+		id="view-modal"
+		class="modal-container hidden sm:top-3/4 max-w-3/4 xl:max-w-1/2 max-h-3/4 lg:max-h-full p-4">
+		<div class="flex justify-between mb-4">
+			<h2 class="card-header text-lg">Hasil Deteksi</h2>
+			<button
+				type="button"
+				class="close-btn-detail rounded-md p-1 hover:bg-gray-100 hover:border-gray-300 ring ring-gray-200 cursor-pointer"
+				title="Close modal">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="currentColor"
+					class="size-6 text-gray-900">
+					<path
+						fill-rule="evenodd"
+						d="M6.293 6.707a1 1 0 0 1 1.414 0L12 10.586l4.293-4.293a1 1 0 1 1 1.414 1.414L13.414 12l4.293 4.293a1 1 0 0 1-1.414 1.414L12 13.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L10.586 12 6.293 7.707a1 1 0 0 1 0-1.414Z"
+						clip-rule="evenodd" />
+				</svg>
+			</button>
+		</div>
+
 		<div
-			class="w-full bg-white border border-gray-300 rounded-lg p-4 text-xs sm:text-sm font-normal text-blue-700">
-			<h1 class="font-bold text-lg mb-2">Informasi Pengguna</h1>
+			class="border border-blue-600 text-blue-600 font-medium rounded-lg px-4 py-2 mt-4">
 			<table class="w-full">
 				<colgroup>
 					<col class="w-1/3" />
@@ -39,12 +104,12 @@
 					</tr>
 				</tbody>
 			</table>
-			<div id="status" class="mt-2"></div>
-			<!-- Status message container -->
 		</div>
 	</div>
-</div>
 
-{% endblock %} {% block scripts %}
-<script src="{{url_for('static', filename='js/detect.js')}}"></script>
-{% endblock %}
+	<div id="overlay" class="fixed inset-0 bg-black opacity-50 hidden z-60"></div>
+
+	{% endblock %} {% block scripts %}
+	<script src="{{url_for('static', filename='js/detect.js')}}"></script>
+	{% endblock %}
+</div>
