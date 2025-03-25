@@ -12,6 +12,7 @@ from flask import (
 from .db import get_db  # Import koneksi database dari db.py
 from werkzeug.utils import secure_filename
 from src.model.save import pushDB, pushImg
+from src.model.machine import detek
 import os
 import glob
 import base64
@@ -97,7 +98,13 @@ def register():
 
 @router.route("/detect", methods=["GET"])
 def detect():
-    return render_template("detect.html")
+    if "images" in request.files:
+        getId = detek(request.files)
+        cursor.execute("SELECT * FROM user WHERE id = %s", (getId,))
+        user_data = cursor.fetchone()
+        return render_template("detect.html", user=user_data)
+    else:
+        return render_template("detect.html")
 
 
 @router.route("/database", methods=["GET"])

@@ -2,10 +2,13 @@ import os
 import glob
 import base64
 import cv2
+import numpy as np
 from os import listdir
 from PIL import Image
 from numpy import asarray, expand_dims
 from keras_facenet import FaceNet
+from ultralytics import YOLO
+from io import BytesIO
 from flask import current_app, jsonify
 
 # Load model deteksi wajah dan FaceNet
@@ -84,3 +87,68 @@ def regisWajah(user_id):
 
     print("Database wajah berhasil diperbarui dan disimpan ke data.pkl!")
     return True
+
+def predFace(file):
+    myfile = open("src/model/data.pkl", "rb")
+    database = pickle.load(myfile)
+    myfile.close()
+    wajah = HaarCascade.detectMultiScale(file,1.1,4)
+
+    if len(wajah)>0:
+        x1, y1, width, height = wajah[0]
+    else:
+        x1, y1, width, height = 1, 1, 10, 10
+
+    x1, y1 = abs(x1), abs(y1)
+    x2, y2 = x1 + width, y1 + height
+
+
+    gbr = cv2.cvtColor(file, cv2.COLOR_BGR2RGB)
+    gbr = Image.fromarray(gbr)                  # konversi dari OpenCV ke PIL
+    gbr_array = asarray(gbr)
+
+    face = gbr_array[y1:y2, x1:x2]
+
+    face = Image.fromarray(face)
+    face = face.resize((160,160))
+    face = asarray(face)
+
+    #face = face.astype('float32')
+    #mean, std = face.mean(), face.std()
+    #face = (face - mean) / std
+
+    face = expand_dims(face, axis=0)
+    #signature = MyFaceNet.predict(face)
+    signature = MyFaceNet.embeddings(face)
+
+    min_dist=100
+    identity=' '
+    for key, value in database.items() :
+        dist = np.linalg.norm(value-signature)
+        if dist < min_dist:
+            min_dist = dist
+            identity = key
+    return identity
+
+def detek(file):
+    model = YOLO('src/model/best.pt')
+    folder = "static/plat/"
+    results = model.predict(file)
+    
+    getId = predFace(file)
+
+    img = cv2.imread(file)
+    # Looping hasil deteksi
+    for i, result in enumerate(results):
+        for j, (box, cls) in enumerate(zip(result.boxes.xyxy, result.boxes.cls)):
+            class_id = int(cls.item())  # Ambil class index
+
+            # Jika class yang terdeteksi adalah 'plat', lakukan crop
+            if class_id == 1:  # Ganti '1' dengan index class plat di modelmu
+                x1, y1, x2, y2 = map(int, box)  # Ambil koordinat bounding box
+                cropped_img = img[y1:y2, x1:x2]  # Crop gambar
+
+                # Simpan gambar hasil crop ke folder 'plat'
+                cropped_filename = os.path.join(folder, f"{getId}_plat.jpg")
+                cv2.imwrite(cropped_filename, cropped_img)
+    return getId
