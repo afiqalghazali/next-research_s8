@@ -96,15 +96,33 @@ def register():
     return render_template("register.html")
 
 
-@router.route("/detect", methods=["GET"])
+@router.route("/detect", methods=["GET", "POST"])
 def detect():
-    if "images" in request.files:
-        getId = detek(request.files)
-        cursor.execute("SELECT * FROM user WHERE id = %s", (getId,))
-        user_data = cursor.fetchone()
-        return render_template("detect.html", user=user_data)
+    user_data = ''
+    if request.method == "GET":
+        return render_template("detect.html")  # Halaman awal tanpa data
+
+@router.route("/detect/image", methods=["POST"])
+def pred():
+    # Proses POST (saat gambar dikirim)
+    if "images" not in request.files:
+        return jsonify({"error": "No image provided"}), 400
+
+    image = request.files["images"]
+    getId = detek(image)  # Fungsi deteksi wajah
+
+    if not getId:
+        return jsonify({"error": "No face detected or ID not found"}), 404
+
+    cursor.execute("SELECT * FROM user WHERE id = %s", (getId,))
+    user_data = cursor.fetchone()
+
+    if user_data:
+        return jsonify(user_data)  # Kirim data JSON
     else:
-        return render_template("detect.html")
+        user = ''
+        return render_template("detect.html", user)
+
 
 
 @router.route("/database", methods=["GET"])

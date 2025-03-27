@@ -13,7 +13,7 @@ def init_db():
         database="unimed",
         user="root",
         password="",
-        port="3306",  # Hapus port ini kalo mysql anda menggunakan port 3306
+        port="3307",  # Hapus port ini kalo mysql anda menggunakan port 3306
     )
     cursor = conn.cursor(dictionary=True)
 

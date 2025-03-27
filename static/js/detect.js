@@ -4,6 +4,9 @@ $(document).ready(function () {
 	const canvasElement = $("#canvas")[0];
 	const ctx = canvasElement.getContext("2d");
 	const viewModal = $("#view-modal");
+	userId = "-";
+	userName = "-";
+	userUnitKerja = "-";
 
 	let isCapturing = false; // Flag to track capturing state
 	let mediaStream; // Media stream variable
@@ -28,6 +31,33 @@ $(document).ready(function () {
 		}
 	}
 
+	function sendToServer() {
+		canvasElement.toBlob(function (blob) {
+			let formData = new FormData();
+			formData.append("images", blob, "capture.png"); // Nama harus sama dengan request.files["images"]
+
+			$.ajax({
+				url: "/detect/image",
+				type: "POST",
+				processData: false,
+				contentType: false,
+				data: formData,
+				success: function (response) {
+					if (response.error) {
+						alert(response.error);
+					} else {
+						userId = response.id;
+						userName = response.nama;
+						userUnitKerja = response.unitKerja;
+					}
+				},
+				error: function (err) {
+					console.error("Error:", err);
+					alert("Gagal mendeteksi wajah.");
+				},
+			});
+		}, "image/png");
+	}
 	// Capture image from video stream
 	function captureImage() {
 		if (isCapturing) return; // Exit if already capturing
@@ -42,6 +72,7 @@ $(document).ready(function () {
 		);
 
 		toggleVideoCanvasVisibility();
+		sendToServer();
 		openModal();
 		isCapturing = true; // Set capturing flag
 	}
@@ -66,6 +97,9 @@ $(document).ready(function () {
 
 	// Open the modal
 	function openModal() {
+		$("#identityNumber").text(userId);
+		$("#name").text(userName);
+		$("#unit").text(userUnitKerja);
 		viewModal.removeClass("hidden"); // Show the modal
 		$("#overlay").removeClass("hidden"); // Show the overlay
 	}

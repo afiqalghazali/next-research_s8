@@ -131,24 +131,43 @@ def predFace(file):
     return identity
 
 def detek(file):
-    model = YOLO('src/model/best.pt')
-    folder = "static/plat/"
-    results = model.predict(file)
-    
-    getId = predFace(file)
+    model = YOLO('src/model/best.pt')  # Load model YOLO
+    folder = "static/plat/"  # Folder untuk menyimpan hasil crop
 
-    img = cv2.imread(file)
-    # Looping hasil deteksi
+    # ✅ Baca file sebagai numpy array
+    file_bytes = np.frombuffer(file.read(), np.uint8)  
+    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)  # Decode ke format gambar
+
+    if img is None:
+        print("❌ Gagal membaca gambar! Cek format file.")
+        return None
+
+    # ✅ Simpan gambar sementara agar YOLO bisa membacanya
+    temp_path = "temp_image.jpg"
+    cv2.imwrite(temp_path, img)
+
+    # ✅ Gunakan path file, bukan numpy array, untuk YOLO
+    results = model.predict(temp_path)  
+    getId = predFace(img)  # Deteksi wajah
+
+    # Looping hasil deteksi untuk mencari objek 'plat'
     for i, result in enumerate(results):
         for j, (box, cls) in enumerate(zip(result.boxes.xyxy, result.boxes.cls)):
             class_id = int(cls.item())  # Ambil class index
-
-            # Jika class yang terdeteksi adalah 'plat', lakukan crop
-            if class_id == 1:  # Ganti '1' dengan index class plat di modelmu
-                x1, y1, x2, y2 = map(int, box)  # Ambil koordinat bounding box
+            
+            if class_id == 1:  # Ganti 1 dengan index class plat di model YOLO-mu
+                x1, y1, x2, y2 = map(int, box)  # Bounding box koordinat
                 cropped_img = img[y1:y2, x1:x2]  # Crop gambar
 
-                # Simpan gambar hasil crop ke folder 'plat'
+                # Pastikan folder ada sebelum menyimpan file
+                if not os.path.exists(folder):
+                    os.makedirs(folder)
+
+                # Simpan gambar hasil crop
                 cropped_filename = os.path.join(folder, f"{getId}_plat.jpg")
                 cv2.imwrite(cropped_filename, cropped_img)
-    return getId
+
+    # ✅ Hapus gambar sementara
+    os.remove(temp_path)
+
+    return getId  # Return ID hasil deteksi wajah
