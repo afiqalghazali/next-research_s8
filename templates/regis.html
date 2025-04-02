@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Detection Object</title>
+		<link
+			href="{{url_for('static', filename='css/output.css')}}"
+			rel="stylesheet" />
+	</head>
+	<body class="flex flex-col h-dvh">
+		<div
+			class="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden pb-4">
+			<!-- Progress Bar -->
+			<div class="w-full bg-gray-200 h-2 mb-6">
+				<div
+					id="progressBar"
+					class="bg-blue-600 h-2 w-0 transition-all duration-300"></div>
+			</div>
+
+			<!-- Progress Steps -->
+			<div
+				class="flex justify-between px-8 border-b-2 border-gray-200 pb-6 mb-4 items-center">
+				<div class="progress-step">
+					<div
+						id="step1Indicator"
+						class="progress-number bg-blue-600 text-white">
+						1
+					</div>
+					<span class="progress-caption">Data Diri</span>
+				</div>
+				<svg
+					class="size-5 text-gray-300 rtl:rotate-180"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 12 10">
+					<path
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="m7 9 4-4-4-4M1 9l4-4-4-4" />
+				</svg>
+				<div class="progress-step">
+					<div
+						id="step2Indicator"
+						class="progress-number bg-gray-300 text-gray-600">
+						2
+					</div>
+					<span class="progress-caption">Ambil Gambar</span>
+				</div>
+				<svg
+					class="size-5 text-gray-300 rtl:rotate-180"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 12 10">
+					<path
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="m7 9 4-4-4-4M1 9l4-4-4-4" />
+				</svg>
+				<div class="progress-step">
+					<div
+						id="step3Indicator"
+						class="progress-number bg-gray-300 text-gray-600">
+						3
+					</div>
+					<span class="progress-caption">Konfirmasi</span>
+				</div>
+			</div>
+
+			<!-- Registration Form -->
+			<form id="registrationForm" class="px-8 mt-4" method="POST">
+				<!-- Step 1: Personal Information -->
+				<div id="step1" class="registration-step">
+					<h2 class="card-header text-2xl mb-8">Informasi Personal</h2>
+
+					<div class="mb-4">
+						<label
+							for="identityNumber"
+							class="block text-sm font-medium text-gray-700 mb-2"
+							>NIM/NIP/NRP</label
+						>
+						<input
+							type="number"
+							id="identityNumber"
+							name="identityNumber"
+							class="input-fields [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+							placeholder="Masukkan nomor identitas anda"
+							required />
+					</div>
+
+					<div class="mb-4">
+						<label
+							for="name"
+							class="block text-sm font-medium text-gray-700 mb-2"
+							>Nama
+						</label>
+						<input
+							type="text"
+							id="name"
+							name="name"
+							class="input-fields"
+							placeholder="Masukkan nama anda"
+							required />
+					</div>
+
+					<div class="mb-4">
+						<label
+							for="unit"
+							class="block text-sm/6 font-medium text-gray-700 mb-2"
+							>Unit Kerja</label
+						>
+						<div class="w-full block">
+							<select id="unit" name="unit" class="select2-fields" required>
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="flex justify-end mt-8">
+						<button type="button" data-next-step="2" class="next-step">
+							Next
+						</button>
+					</div>
+				</div>
+
+				<!-- Step 2: Webcam Capture -->
+				<div id="step2" class="registration-step hidden">
+					<h2 class="card-header text-2xl mb-8">Ambil Gambar</h2>
+
+					<div class="flex justify-center mb-4">
+						<video
+							id="videoPreview"
+							class="size-60 sm:size-80 rounded-full border-2 border-blue-600 object-cover"
+							autoplay></video>
+					</div>
+
+					<div
+						class="flex gap-2 sm:gap-4 bg-blue-100 items-center rounded-md p-4 mb-4 mt-8">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							class="size-10 sm:size-8 text-blue-500">
+							<path
+								fill-rule="evenodd"
+								d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+								clip-rule="evenodd" />
+						</svg>
+
+						<div
+							class="text-center text-xs sm:text-sm text-blue-600"
+							id="orientationInstruction"></div>
+					</div>
+
+					<div class="mt-6">
+						<div class="flex justify-between items-center mb-4">
+							<h3 class="card-header text-lg">Gambar yang telah diambil</h3>
+							<button
+								type="button"
+								title="deletePicturesBtn"
+								id="deletePicturesBtn"
+								class="bg-red-600 cursor-pointer rounded-md p-2 hover:bg-red-700 focus:outline-none">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									class="size-4 text-white">
+									<path
+										fill-rule="evenodd"
+										d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+										clip-rule="evenodd" />
+								</svg>
+							</button>
+						</div>
+						<div
+							id="capturedImagesContainer"
+							class="flex flex-wrap justify-center gap-4 mb-4"></div>
+					</div>
+
+					<canvas id="captureCanvas" class="hidden"></canvas>
+
+					<div class="flex justify-between mt-8">
+						<button type="button" data-prev-step="1" class="prev-step">
+							Kembali
+						</button>
+						<button type="button" data-next-step="3" class="next-step">
+							Next
+						</button>
+					</div>
+				</div>
+
+				<!-- Step 3: Confirmation -->
+				<div id="step3" class="registration-step hidden">
+					<h2 class="card-header text-2xl mb-8">Konfirmasi Data</h2>
+
+					<div
+						class="space-y-1 flex flex-col bg-blue-100 items-center rounded-md p-4 text-xs sm:text-sm font-normal text-blue-700">
+						<div class="flex w-full">
+							<p class="sm:w-2/6">NIP/NIM/NRP</p>
+							<p class="me-2">:</p>
+							<p id="confirmIdentityNumber" class="flex-1 font-medium"></p>
+						</div>
+
+						<div class="flex w-full">
+							<p class="sm:w-2/6">Nama</p>
+							<p class="me-2">:</p>
+							<p id="confirmName" class="flex-1 font-medium"></p>
+						</div>
+
+						<div class="flex w-full">
+							<p class="sm:w-2/6">Unit Kerja</p>
+							<p class="me-2">:</p>
+							<p id="confirmUnit" class="flex-1 font-medium"></p>
+						</div>
+					</div>
+
+					<div class="mt-6">
+						<h3 class="card-header text-lg mb-4">Gambar yang telah diambil</h3>
+						<div
+							id="confirmationImagesContainer"
+							class="flex flex-wrap justify-center gap-4 mb-4"></div>
+					</div>
+
+					<div class="flex justify-between mt-8">
+						<button type="button" data-prev-step="2" class="prev-step">
+							Kembali
+						</button>
+						<button
+							type="submit"
+							class="bg-blue-600 text-white px-6 py-2 rounded-md cursor-pointer hover:bg-blue-700">
+							Daftar
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+		<script src="{{url_for('static', filename='js/navbar.js')}}"></script>
+		<link
+			href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+			rel="stylesheet" />
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+		<script src="{{url_for('static', filename='js/register.js')}}"></script>
+	</body>
+</html>

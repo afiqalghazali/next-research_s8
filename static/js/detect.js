@@ -71,8 +71,9 @@ $(document).ready(function () {
 			canvasElement.height
 		);
 
-		toggleVideoCanvasVisibility();
 		sendToServer();
+
+		toggleVideoCanvasVisibility();
 		openModal();
 		isCapturing = true; // Set capturing flag
 	}

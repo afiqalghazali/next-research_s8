@@ -71,6 +71,27 @@ def user_home(id):
 
     return render_template("user_home.html", user=user_data)
 
+@router.route("/registrasi", methods=["GET", "POST"])
+def registrasi():
+    
+    if request.method == "POST":
+        identityNumber = request.form.get("identityNumber")
+        name = request.form.get("name")
+        unit = request.form.get("unit")
+
+        res = pushDB(identityNumber, name, unit)
+        if res is not True:
+            return jsonify({"error": "Gagal menyimpan user", "message": res}), 500
+
+        user_id = identityNumber  # Ambil ID user yang baru dimasukkan
+
+        # Cek apakah ada file gambar
+        if "images" in request.files:
+            files = request.files.getlist("images")
+            resImg = pushImg(user_id, files)
+
+        return redirect(url_for("router.regis"))
+    return render_template('regis.html')
 
 @router.route("/register", methods=["GET", "POST"])
 def register():
@@ -120,8 +141,7 @@ def pred():
     if user_data:
         return jsonify(user_data)  # Kirim data JSON
     else:
-        user = ''
-        return render_template("detect.html", user)
+        return render_template("detect.html", user_data)
 
 
 
