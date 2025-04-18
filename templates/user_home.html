@@ -195,6 +195,30 @@
 							</select>
 						</div>
 					</div>
+					<form
+						method="POST"
+						action="{{ url_for('router.user_home', id=user.id) }}">
+						<div class="mb-4">
+							<div class="mb-4">
+								<label
+									for="name"
+									class="block text-sm font-medium text-gray-700 mb-2"
+									>Ubah Password
+								</label>
+								<input
+									type="text"
+									id="newPassword"
+									name="newPassword"
+									class="input-fields"
+									placeholder="Masukkan password baru anda" />
+							</div>
+							<button
+								type="submit"
+								class="bg-blue-600 text-white px-6 py-2 rounded-md cursor-pointer hover:bg-blue-700">
+								Ubah
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

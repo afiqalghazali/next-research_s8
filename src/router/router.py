@@ -11,8 +11,8 @@ from flask import (
 )
 from .db import get_db  # Import koneksi database dari db.py
 from werkzeug.utils import secure_filename
-from src.model.save import pushDB, pushImg
-from src.model.machine import detek
+from src.model.save import pushDB, pushImg, pushPassword
+from src.model.machine import detek, predFace
 import os
 import glob
 import base64
@@ -38,7 +38,7 @@ def login():
     user_data = cursor.fetchone()
 
     if user_data:
-        if user_data["id"] == username and user_data["id"] == password:
+        if user_data["id"] == username and user_data["password"] == password:
             user = User(user_data["id"], user_data["nama"], user_data["role"])
             login_user(user)
 
@@ -66,32 +66,18 @@ def home():
 
 @router.route("/<string:id>/home", methods=["GET", "POST"])
 def user_home(id):
-    cursor.execute("SELECT * FROM user WHERE id = %s", (id,))
-    user_data = cursor.fetchone()
-
-    return render_template("user_home.html", user=user_data)
-
-@router.route("/registrasi", methods=["GET", "POST"])
-def registrasi():
-    
     if request.method == "POST":
-        identityNumber = request.form.get("identityNumber")
-        name = request.form.get("name")
-        unit = request.form.get("unit")
-
-        res = pushDB(identityNumber, name, unit)
+        newPassword = request.form.get("newPassword")
+        res = pushPassword(id, newPassword)
         if res is not True:
             return jsonify({"error": "Gagal menyimpan user", "message": res}), 500
 
-        user_id = identityNumber  # Ambil ID user yang baru dimasukkan
+    # GET atau setelah POST sukses, ambil ulang data user
+    cursor.execute("SELECT * FROM user WHERE id = %s", (id,))
+    user_data = cursor.fetchone()
+    return render_template("user_home.html", user=user_data)
+    
 
-        # Cek apakah ada file gambar
-        if "images" in request.files:
-            files = request.files.getlist("images")
-            resImg = pushImg(user_id, files)
-
-        return redirect(url_for("router.regis"))
-    return render_template('regis.html')
 
 @router.route("/register", methods=["GET", "POST"])
 def register():
@@ -141,7 +127,8 @@ def pred():
     if user_data:
         return jsonify(user_data)  # Kirim data JSON
     else:
-        return render_template("detect.html", user_data)
+        user = ""
+        return render_template("detect.html", user=user)
 
 
 
